@@ -36,6 +36,10 @@ let sourceNode;
 let meydaAnalyzer;
 let isListening = false;
 
+// Speech Recognition Variables
+let speechRecognition;
+let isSpeechActive = false;
+
 // Classification Thresholds & State
 const RMS_THRESHOLD = 0.05; // Minimum volume to register a "hit"
 const CENTROID_THRESHOLD = 40; // Above this = Snare (high freq noise), Below this = Kick (low freq punch)
@@ -132,6 +136,44 @@ async function startMic() {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         sourceNode = audioContext.createMediaStreamSource(micStream);
         
+        // Setup Speech Recognition
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition && !speechRecognition) {
+            speechRecognition = new SpeechRecognition();
+            speechRecognition.continuous = true;
+            speechRecognition.interimResults = false;
+            
+            speechRecognition.onresult = (event) => {
+                const resultIndex = event.results.length - 1;
+                const transcript = event.results[resultIndex][0].transcript.trim().toLowerCase();
+                
+                if (transcript.includes("rave")) {
+                    console.log("🎤 Keyword Detected: rave");
+                    if (fullStrudelCode !== "") {
+                        fullStrudelCode += "\n";
+                    }
+                    if (typeof rave !== 'undefined') {
+                        fullStrudelCode += rave;
+                    } else {
+                        fullStrudelCode += `// This is a rave`;
+                    }
+                    codeOutput.value = fullStrudelCode;
+                    codeOutput.scrollTop = codeOutput.scrollHeight;
+                }
+            };
+            
+            speechRecognition.onerror = (e) => {
+                console.warn("Speech Recognition Error:", e);
+            };
+            
+            speechRecognition.onend = () => {
+                // Auto-restart if we are still supposed to be listening
+                if (isListening && isSpeechActive) {
+                    try { speechRecognition.start(); } catch(e) {}
+                }
+            };
+        }
+        
         if (typeof Meyda === 'undefined') {
             console.error("Meyda.js is not loaded!");
             return;
@@ -196,6 +238,16 @@ async function startMic() {
         isListening = true;
         recordButton.disabled = false; // Enable recording
         
+        if (speechRecognition && !isSpeechActive) {
+            try {
+                speechRecognition.start();
+                isSpeechActive = true;
+                console.log("Speech Recognition started.");
+            } catch(e) {
+                console.warn("Could not start speech recognition:", e);
+            }
+        }
+        
         micButton.innerText = "Stop Microphone";
         micButton.classList.remove("primary");
         micButton.style.backgroundColor = "#f44336";
@@ -215,6 +267,14 @@ function stopMic() {
     if (meydaAnalyzer) {
         meydaAnalyzer.stop();
     }
+    
+    if (speechRecognition && isSpeechActive) {
+        try {
+            speechRecognition.stop();
+            isSpeechActive = false;
+        } catch(e) {}
+    }
+    
     if (micStream) {
         micStream.getTracks().forEach(track => track.stop());
     }
