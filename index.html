@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Strudel-Sync - Phase 2</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Load Meyda.js for audio feature extraction -->
+    <script src="https://unpkg.com/meyda/dist/web/meyda.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Strudel-Sync</h1>
+            <p>Phase 2: DSP Listener (Meyda.js Integration)</p>
+        </header>
+
+        <div class="audio-controls">
+            <h2>Audio Input</h2>
+            <div style="display: flex; gap: 10px;">
+                <button id="micButton" class="btn primary">Start Microphone</button>
+                <button id="recordButton" class="btn" disabled>Start 2s Recording Cycle</button>
+            </div>
+            <div class="meter-container" style="margin-top: 15px; background: #333; height: 30px; border-radius: 15px; overflow: hidden; position: relative;">
+                <div id="volumeMeter" style="width: 0%; height: 100%; background: linear-gradient(90deg, #4caf50, #ffeb3b, #f44336); transition: width 0.1s ease-out;"></div>
+                <span id="volumeText" style="position: absolute; width: 100%; text-align: center; top: 5px; font-size: 12px; font-weight: bold; text-shadow: 1px 1px 2px black;">RMS: 0.000</span>
+            </div>
+            <div style="margin-top: 10px; font-size: 14px; color: #aaa;">
+                Spectral Flatness: <span id="flatnessText" style="color: white; font-weight: bold;">0.000</span> | 
+                Centroid: <span id="centroidText" style="color: white; font-weight: bold;">0.0</span>
+            </div>
+            <div style="margin-top: 15px; font-size: 18px; color: #4caf50; font-weight: bold; background: #222; padding: 10px; border-radius: 8px; text-align: center;">
+                Detected: <span id="detectedHitText" style="color: white;">None</span>
+            </div>
+        </div>
+
+        <div class="iframe-container" style="margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;">
+                <h2>Generated Strudel Code</h2>
+                <button id="copyBtn" class="btn" style="background-color: #2196F3; color: white; padding: 5px 15px; font-size: 14px;">Copy Code</button>
+            </div>
+            <textarea id="codeOutput" readonly rows="4" style="width: 100%; background: #222; color: #4caf50; font-family: monospace; padding: 10px; border-radius: 5px; border: 1px solid #444; margin-bottom: 20px;" placeholder="Generated Strudel code will appear here..."></textarea>
+            
+            <h2>Strudel Editor</h2>
+            <iframe id="strudelFrame" src="https://strudel.cc/?embed=1" width="100%" height="400px" frameborder="0" allow="autoplay; audio"></iframe>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

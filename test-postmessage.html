@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <button onclick="document.getElementById('f').contentWindow.postMessage('$: s(\'bd\')', '*')">Send bd</button>
+    <button onclick="document.getElementById('f').contentWindow.postMessage({type: 'evaluate', code: '$: s(\'sd\')'}, '*')">Send {type: evaluate, code}</button>
+    <iframe id="f" src="https://strudel.cc/?embed=1" width="100%" height="400"></iframe>
+</body>
+</html>

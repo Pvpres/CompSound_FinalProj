@@ -1,0 +1,106 @@
+:root {
+    --bg-color: #121212;
+    --panel-bg: #1e1e1e;
+    --text-primary: #e0e0e0;
+    --accent: #bb86fc;
+    --accent-hover: #9c27b0;
+    --border: #333;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--panel-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 9999;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    color: var(--accent);
+    margin: 0 0 0.5rem 0;
+}
+
+.bridge-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+textarea {
+    width: 100%;
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 1rem;
+    resize: vertical;
+    position: relative;
+    z-index: 100;
+    user-select: auto;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    align-self: flex-start;
+}
+
+.btn.primary {
+    background-color: var(--accent);
+    color: #000;
+}
+
+.btn.primary:hover {
+    background-color: var(--accent-hover);
+    color: #fff;
+}
+
+.iframe-container {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #fff;
+    /* Strudel REPL has its own background, usually light or dynamic */
+}
+
+.iframe-container h2 {
+    background-color: var(--border);
+    margin: 0;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: #fff;
+}
+
+iframe {
+    display: block;
+}
