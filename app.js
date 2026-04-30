@@ -10,6 +10,7 @@ const detectedHitText = document.getElementById('detectedHitText');
 const recordButton = document.getElementById('recordButton');
 const codeOutput = document.getElementById('codeOutput');
 const copyBtn = document.getElementById('copyBtn');
+const clearCodeBtn = document.getElementById('clearCodeBtn');
 
 copyBtn.addEventListener('click', () => {
     if (codeOutput.value) {
@@ -21,6 +22,11 @@ copyBtn.addEventListener('click', () => {
             console.error('Failed to copy text: ', err);
         });
     }
+});
+
+clearCodeBtn.addEventListener('click', () => {
+    fullStrudelCode = "";
+    codeOutput.value = "";
 });
 
 // Web Audio API and Meyda variables
@@ -40,10 +46,10 @@ const COOLDOWN_MS = 150; // Milliseconds to wait before detecting the next hit
 let isRecording = false;
 let recordingCycleInterval;
 let cycleStartTime = 0;
-let beatArray = new Array(16).fill('~');
 const CYCLE_DURATION_MS = 2000;
-const SLOTS = 16;
+const SLOTS = 8; // Changed from 16 to 8 (each slot is now 250ms instead of 125ms)
 const SLOT_DURATION_MS = CYCLE_DURATION_MS / SLOTS;
+let beatArray = new Array(SLOTS).fill('~');
 
 // Maintain full history to append cycles
 let fullStrudelCode = "";
@@ -72,7 +78,7 @@ function startNewCycle() {
     
     // Reset for the new cycle
     cycleStartTime = now;
-    beatArray = new Array(16).fill('~');
+    beatArray = new Array(SLOTS).fill('~');
     console.log("⏱️ New 2-second recording cycle started!");
 }
 
