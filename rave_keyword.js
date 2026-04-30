@@ -3,7 +3,7 @@ let rave = "samples('github:mot4i/garden')\nsamples('github:todepond/dirt-sample
 \n$: sound(\"bd:8(4,8)\")\
 \n.lpf(600)\
 \n.bank(\"garden\")\
-\n.duck(1).orbit(2).duckattack(0.2)\
+\n//.duck(1).orbit(2).duckattack(0.2)\
 \n\
 \n$: s(\"airhorn\")\
 \n.chop(8)\
@@ -24,4 +24,4 @@ let rave = "samples('github:mot4i/garden')\nsamples('github:todepond/dirt-sample
 \n.s(\"saw\")\
 \n.transpose(\"0,7\")\
 \n\n\
-//all(x=>x.lpf(5000).hpf(500))";
+all(x=>x.lpf(5000).hpf(500))";
