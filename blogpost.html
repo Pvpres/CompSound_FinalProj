@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strudel-Sync</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Algorithmic Composition Synthesis</h1>
+    <p>My experience in building Pitch Set Theory in Web Audio was interesting to say the least.
+        I think the most interesting part with pitch theory is trying to match the math with
+        the ears.
+    </p>
+    <h2>How Does It Work?</h2>
+    <p>
+        Fundamentally, the app works by taking a "starting set" of pitches (represented as MIDI numbers, where 60 is
+        middle C) and generating a musical piece using one of three primary methods: Transposition, Inversion, or
+        Retrograde.
+        These notes are represented with the integers 0-11, corresponding to the notes of the chromatic scale starting
+        at C. From there, each transformation is applied randomly to a starting composition, with that output being fed
+        as input to the next composition.
+        This allows for the exploration of a wide range of musical ideas, all from a simple set of initial notes. There
+        are a few rules I put in place for the design:
+    <ol>
+        <li> The same transformation cannot be applied twice in a row.</li>
+        <li> The inversion transformation can only have a pivot of 0 (C) or the first note of the current sequence.</li>
+        <li>Some transformations sound better than others, therefore they should occur more often.</li>
+    </ol>
+    All of these rules were put in place to make the composition sound as melodic as an algorithm can. Specifically rule
+    3 was put in place so that the composition wouldn't be having a tune and then immediately reversing it. Overall I
+    think these rules made my project alot easier on the ear.
+    </p>
+
+    <h2>Web Audio</h2>
+    <img src="Screenshot 2026-04-27 at 5.32.29 PM.png" alt="Audion">
+    <p>
+        A few of the biggest hurdles came from using Web Audio. It took me a bit to figure out
+        the AudioContext and how it works. I also had some trouble with the scheduler, but after
+        some trial and error, I think I figured it out. There are many oscilalltors created during each run (44)
+        although only 2 are depicted. Each oscillator feeds into a masterGain node
+        which is used to prevent clipping, which I think is a problem I haven't fully solved yet (I removed the ADSR
+        envelope from the synth because I couldn't perfect it. If you see it on the main page it means I fixed it so
+        yippeeee!)
+    </p>
+    <p> The framework works as the following Sound Source -> Individual Envelope (Gain) -> Master Gain -> Dynamics
+        Compressor -> Destination (Speakers). The Dynamics Compressor ended up being really important. Since
+        algorithmic composition can cause overalapping frequencies and rapid note triggers, the audio can peak and cause
+        distortion (clipping). The compressor
+        squashes those audo levels if it goes behind a predefined threshold (12 dB in my code).
+    </p>
+    <h2>Fun Features</h2>
+    <p> I wanted to add cool stuff to make the composition sound less robotic. I found a really cool WebAudio Library
+        called WebAudioFontPlayer which is where all the instrument sounds come from.
+        I add a Euclidean Rhythm Generator because I found that these rhythms always made my live coding in Strudel more
+        dynamic (although it doesn't work as well here). Octave Displacement randomly takes notes up or down an octave
+        for some more energy into the compositions. Note duration is more so a feature I used while testing my
+        Euclidean Controls (I wanted to see if I could recreate the .slow()/.fast() effects from Strudel) but I liked it
+        so much I added it as its own standalone.
+    </p>
+    <h2>Conclusion</h2>
+    <p>Overall, this was a really fun homework assignment. Professor Santolucito thank you for such a fun semester! As a
+        member of WKCR (the radio station) this class really helped me understand some of the issues I see on our radio
+        console. Clipping happens often if we put the volume up too much (gain going over 1). I promise I won't let what
+        I learned go to waste! Thank you!!!</p>
+</body>
+
+</html>
