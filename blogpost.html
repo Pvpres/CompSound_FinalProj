@@ -8,62 +8,66 @@
 </head>
 
 <body>
-    <h1 style="text-align: center;">Algorithmic Composition Synthesis</h1>
-    <p>My experience in building Pitch Set Theory in Web Audio was interesting to say the least.
-        I think the most interesting part with pitch theory is trying to match the math with
-        the ears.
+    <h1 style="text-align: center;">Strudel-Sync</h1>
+    <p>I have learned so much while taking Computational Sound, and this project is the
+        culmination of it. Live-coding
+        is so much fun
+        but it definitely has a learning curve (those 3 minutes are terrifying). My project was made with the intent of
+        making
+        Strudel more accessible to people who may not be as comfortable live coding, especially the musical notation
+        side!
     </p>
-    <h2>How Does It Work?</h2>
+    <h2>A Tale of Two Waveforms</h2>
+    <img src="audio_analysis_plot.png" alt="Audio Analysis Plot Beneath The Hood"
+        style="width: 100%; max-width: 800px; display: block; margin: 20px auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
     <p>
-        Fundamentally, the app works by taking a "starting set" of pitches (represented as MIDI numbers, where 60 is
-        middle C) and generating a musical piece using one of three primary methods: Transposition, Inversion, or
-        Retrograde.
-        These notes are represented with the integers 0-11, corresponding to the notes of the chromatic scale starting
-        at C. From there, each transformation is applied randomly to a starting composition, with that output being fed
-        as input to the next composition.
-        This allows for the exploration of a wide range of musical ideas, all from a simple set of initial notes. There
-        are a few rules I put in place for the design:
-    <ol>
-        <li> The same transformation cannot be applied twice in a row.</li>
-        <li> The inversion transformation can only have a pivot of 0 (C) or the first note of the current sequence.</li>
-        <li>Some transformations sound better than others, therefore they should occur more often.</li>
-    </ol>
-    All of these rules were put in place to make the composition sound as melodic as an algorithm can. Specifically rule
-    3 was put in place so that the composition wouldn't be having a tune and then immediately reversing it. Overall I
-    think these rules made my project alot easier on the ear.
+        To truly understand what's happening beneath the hood, we can visualize the generated sound waves.
+        The plot above shows three distinct perspectives of our algorithmic hits: the time-domain waveform (how the
+        amplitude changes over time),
+        the frequency spectrogram (how different frequencies evolve during the hit), and the power spectral density.
+        The plots and my following explanations are based on the kick drum.
     </p>
-
-    <h2>Web Audio</h2>
-    <img src="Screenshot 2026-04-27 at 5.32.29 PM.png" alt="Audion">
+    <h3>The Time Domain</h3>
     <p>
-        A few of the biggest hurdles came from using Web Audio. It took me a bit to figure out
-        the AudioContext and how it works. I also had some trouble with the scheduler, but after
-        some trial and error, I think I figured it out. There are many oscilalltors created during each run (44)
-        although only 2 are depicted. Each oscillator feeds into a masterGain node
-        which is used to prevent clipping, which I think is a problem I haven't fully solved yet (I removed the ADSR
-        envelope from the synth because I couldn't perfect it. If you see it on the main page it means I fixed it so
-        yippeeee!)
+        <img src="jazz.webp" alt="Ya like jazz?"
+            style="float: right; width: 180px; margin: 0 0 10px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+        The top plot shows the sound wave in the time domain. This is what the microphone picks up.
+        This is a direct visualization of the output of my Gain Nodes. One important tid-bit was the use of
+        a Dynamic Compressor. In an actual live coding session there will be overlapping noises and loud hits.
+        The compressor makes it so any overlapping waveforms that combine over 1.0 (or my -12 dB threshold)
+        that may cause clipping, have their peaks squashed so the waveform is smooth (like jazz).
     </p>
-    <p> The framework works as the following Sound Source -> Individual Envelope (Gain) -> Master Gain -> Dynamics
-        Compressor -> Destination (Speakers). The Dynamics Compressor ended up being really important. Since
-        algorithmic composition can cause overalapping frequencies and rapid note triggers, the audio can peak and cause
-        distortion (clipping). The compressor
-        squashes those audo levels if it goes behind a predefined threshold (12 dB in my code).
+    <h3>Spectrogram</h3>
+    <p>This is the heat map of the sound. The brightness represents the intensity in decibels of that frequency at that
+        exact moment.
+        This can visually map certain sounds to how they feel when played. The bass drum hit (that big thump) has a
+        bright curve dropping from higher to lower frequencies.
+        The bright vertical band at the beginning represents the BIG initial click of the hit (the "tk"), and the big
+        orange mushy part is the body of the drum.
     </p>
-    <h2>Fun Features</h2>
-    <p> I wanted to add cool stuff to make the composition sound less robotic. I found a really cool WebAudio Library
-        called WebAudioFontPlayer which is where all the instrument sounds come from.
-        I add a Euclidean Rhythm Generator because I found that these rhythms always made my live coding in Strudel more
-        dynamic (although it doesn't work as well here). Octave Displacement randomly takes notes up or down an octave
-        for some more energy into the compositions. Note duration is more so a feature I used while testing my
-        Euclidean Controls (I wanted to see if I could recreate the .slow()/.fast() effects from Strudel) but I liked it
-        so much I added it as its own standalone.
+    <h3>Power Spectral Density</h3>
+    <p>
+        This is a representation of the average energy of each frequency. The huge spike in low frequencies is the bass
+        drum thump and the gradual
+        slope downwards shows it decaying into higher frequencies. This graph shows how my project maintains tonal
+        balance of audio during
+        algorithmic composition, something that can be very hard to do when programming music. I used the Master Gain to
+        evenly lower the power across the entire spectrum so
+        that those massive localized frequency spikes don't blow out the speakers.This is essentially the
+        Fourier Transform of my signal.
     </p>
-    <h2>Conclusion</h2>
-    <p>Overall, this was a really fun homework assignment. Professor Santolucito thank you for such a fun semester! As a
-        member of WKCR (the radio station) this class really helped me understand some of the issues I see on our radio
-        console. Clipping happens often if we put the volume up too much (gain going over 1). I promise I won't let what
-        I learned go to waste! Thank you!!!</p>
+    <h2>Closing Thoughts</h2>
+    <p>The best way to test this without any software
+        would be to set up a simple API server that serves Strudel code, which can be triggered to play
+        automatically when a hit is detected.
+        That would be the true test of this project! I plan to continue working on this. Pitchy.js was a little more
+        complicated than I thought, so it was much harder to debug and generate the synth. WebAudio instruments and
+        adjustment is also not the most
+        well-documented
+        thing in the world. Overall I think I'm proud of how this project turned out. Computational Sound, how I love
+        you!!!
+    </p>
+    <a href="index.html">Back to Home</a>
 </body>
 
 </html>
